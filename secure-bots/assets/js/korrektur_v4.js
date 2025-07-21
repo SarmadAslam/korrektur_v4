@@ -1,16 +1,3 @@
-const mainTextAreaToggle = document.querySelector(".main-textarea-section");
-const correctionSidebar = document.querySelector(".correction-sidebar");
-const isMobileToggle = window.innerWidth <= 767;
-const isMobile =
-  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
-const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-const needsScrollHandling = isMobile || isSafari;
-const clearButton = document.querySelector("#clearBtn");
-const revertFun = document.querySelector("#revertBack");
-
 document.addEventListener("DOMContentLoaded", function () {
   if (window.innerWidth < 400) {
     const langLegendDiv = document.querySelector(".lang-legend-div");
@@ -116,11 +103,11 @@ const Delta = Quill.import("delta");
 
 const LIST_PREFIX_RE = /^(\s*)([\u2022\u00B7•]|[0-9]+[.)]|[A-Za-z]+[.)])\s+/;
 //  group 1  ───┘          optional leading spaces / tabs coming from Word
-//  group 2                 •  •  •  OR “1.” “1)”  OR “A.” “a)” …
-//  “\s+”                   at least one space / tab after the prefix
+//  group 2                 •  •  •  OR "1." "1)"  OR "A." "a)" …
+//  "\s+"                   at least one space / tab after the prefix
 
 function matchMsWordList(node, delta) {
-  // clone ops so we never mutate Quill’s original Delta
+  // clone ops so we never mutate Quill's original Delta
   const ops = delta.ops.map((op) => ({ ...op }));
 
   // ── 1. find the first text op that actually contains content
@@ -133,8 +120,8 @@ function matchMsWordList(node, delta) {
   const m = firstText.insert.match(LIST_PREFIX_RE);
   if (!m) return delta; // no bullet/number detected
 
-  const fullPrefix = m[0]; // e.g. “1. ” (with trailing space)
-  const prefixCore = m[2]; // e.g. “1.”   (used below)
+  const fullPrefix = m[0]; // e.g. "1. " (with trailing space)
+  const prefixCore = m[2]; // e.g. "1."   (used below)
   firstText.insert = firstText.insert.slice(fullPrefix.length);
 
   // ── 3. drop the trailing hard-return Word adds at the end of the paragraph
@@ -152,7 +139,7 @@ function matchMsWordList(node, delta) {
   const levelMatch = style.match(/level(\d+)/); // level1 → indent 0, level2 → indent 1 …
   if (levelMatch) indent = parseInt(levelMatch[1], 10) - 1;
 
-  // ── 6. append Quill’s own list marker
+  // ── 6. append Quill's own list marker
   ops.push({ insert: "\n", attributes: { list: listType, indent } });
 
   return new Delta(ops);
@@ -160,12 +147,12 @@ function matchMsWordList(node, delta) {
 
 // Same helper for bullet paragraphs that come through <p class="MsoNormal"> …
 function maybeMatchMsWordList(node, delta) {
-  // Word’s bullet glyphs are usually “•” U+2022 or “·” U+00B7
+  // Word's bullet glyphs are usually "•" U+2022 or "·" U+00B7
   const ch = delta.ops[0].insert.trimLeft()[0];
   if (ch === "•" || ch === "·") {
     return matchMsWordList(node, delta);
   }
-  // also catch “1. ” or “a) ” in plain MsoNormal paragraphs:
+  // also catch "1. " or "a) " in plain MsoNormal paragraphs:
   if (/^[0-9A-Za-z][.)]/.test(delta.ops[0].insert)) {
     return matchMsWordList(node, delta);
   }
@@ -260,6 +247,79 @@ const quill1 = new Quill("#inputText", {
   placeholder:
     "Skriv eller indtal din tekst for at rette grammatikken på dansk…",
 });
+
+
+const clearButton = document.querySelector("#clearBtn");
+const revertFun = document.querySelector("#revertBack");
+const forwardFun = document.querySelector("#forwardButton");
+
+const mainTextAreaToggle = document.querySelector(".main-textarea-section");
+const correctionSidebar = document.querySelector(".correction-sidebar");
+const isMobileToggle = window.innerWidth <= 767;
+const isMobile =
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const needsScrollHandling = isMobile || isSafari;
+
+
+
+// Log initialization status
+console.log("Initializing undo/redo buttons...");
+console.log("revertFun (undo button):", revertFun ? "Found" : "Not found");
+console.log("forwardFun (redo button):", forwardFun ? "Found" : "Not found");
+console.log("clearButton:", clearButton ? "Found" : "Not found");
+console.log("quill1:", quill1 ? "Quill editor initialized" : "Quill editor not initialized");
+console.log("quill1.history:", quill1 && quill1.history ? "History module available" : "History module not available");
+
+
+
+// ========================================== Revert back (undo) btn ===============================================
+if (revertFun) {
+  revertFun.addEventListener("click", (e) => {
+    e.preventDefault();
+    console.log("Undo button clicked");
+    try {
+      if (quill1 && quill1.history) {
+        quill1.history.undo();
+        console.log("Undo action performed. Undo stack:", quill1.history.stack.undo.length, "Redo stack:", quill1.history.stack.redo.length);
+        updateClearRevertButtonState(); // <-- Added to update button states after undo
+      } else {
+        console.error("Undo failed: quill1 or quill1.history is undefined");
+      }
+    } catch (error) {
+      console.error("Error during undo:", error);
+    }
+  });
+} else {
+  console.error("Undo button (#revertBack) not found in DOM");
+}
+
+// ========================================== Forward (redo) btn ===============================================
+if (forwardFun) {
+  forwardFun.addEventListener("click", (e) => {
+    e.preventDefault();
+    console.log("Redo button clicked");
+    try {
+      if (quill1 && quill1.history) {
+        quill1.history.redo();
+        console.log("Redo action performed. Undo stack:", quill1.history.stack.undo.length, "Redo stack:", quill1.history.stack.redo.length);
+        updateClearRevertButtonState(); // <-- Added to update button states after redo
+      } else {
+        console.error("Redo failed: quill1 or quill1.history is undefined");
+      }
+    } catch (error) {
+      console.error("Error during redo:", error);
+    }
+  });
+} else {
+  console.error("Redo button (#forwardButton) not found in DOM");
+}
+
+
+
 /* ------------------------------------------------------------------ 4  Clipboard matchers */
 function mark(attr) {
   return (node, delta) => {
@@ -918,7 +978,7 @@ function htmlToTextWithSpacing(html) {
   );
 
   blockElements.forEach((el) => {
-    /* Detect a “strong paragraph” ⇢ <p><strong>…</strong></p> */
+    /* Detect a "strong paragraph" ⇢ <p><strong>…</strong></p> */
     const isStrongParagraph =
       el.tagName === "P" &&
       el.childNodes.length === 1 &&
@@ -2266,7 +2326,7 @@ function highlightWordInInput(word, threshold = 0.8) {
 function clearHighlights() {
   if (!quill1) return;
 
-  /* 1 ─── Remove Quill’s “mark” format from the whole doc */
+  /* 1 ─── Remove Quill's "mark" format from the whole doc */
   quill1.formatText(0, quill1.getLength(), "mark", false, Quill.sources.API);
 
   /* 2 ─── Strip inline yellow styling, if any */
@@ -3197,6 +3257,12 @@ document.querySelector("#revertBack").addEventListener("click", (e) => {
   quill1.history.undo();
 });
 
+// ========================================== Forward btn ===============================================
+document.querySelector("#forwardButton").addEventListener("click", (e) => {
+  e.preventDefault();
+  quill1.history.redo();
+});
+
 // ----------------------------- adjust heigts ========================================================
 // Add mobile detection
 
@@ -3302,18 +3368,18 @@ function adjustHeights() {
   );
 
   // Apply the final height to all containers
-  textAreaContainer.style.height = `${finalHeight}px`;
-  mainTextAreaSection.style.height = `${finalHeight}px`;
+  // textAreaContainer.style.height = `${finalHeight}px`;
+  // mainTextAreaSection.style.height = `${finalHeight}px`;
 
-  if (correctionSidebar) {
-    correctionSidebar.style.height = `${finalHeight}px`;
-  }
+  // if (correctionSidebar) {
+  //   correctionSidebar.style.height = `${finalHeight}px`;
+  // }
 
   // Handle style-inner specifically
-  if (styleInner && window.getComputedStyle(styleInner).display !== "none") {
-    const availableHeight = finalHeight - headerHeight;
-    styleInner.style.height = `${availableHeight}px`;
-  }
+  // if (styleInner && window.getComputedStyle(styleInner).display !== "none") {
+  //   const availableHeight = finalHeight - headerHeight;
+  //   styleInner.style.height = `${availableHeight}px`;
+  // }
 
   // Handle other sidebar sections (improv-inner, correction-inner)
   const improvInner = document.querySelector(".improv-inner");
@@ -3424,23 +3490,41 @@ window.addEventListener("load", function () {
 
 // ------------------------------------- handle clear button ----------------------------
 // Function to update clear button state
+// ========================================== Update button states ===============================================
 function updateClearRevertButtonState(flag = "center") {
-  // Enable/disable clear button based on textarea content
-
+  // Handle explicit enable/disable flags
   if (flag === "false") {
     revertFun.disabled = false;
+    forwardFun.disabled = false;
     clearButton.disabled = false;
+    return;
   }
   if (flag === "true") {
-    // disabled both
     revertFun.disabled = true;
+    forwardFun.disabled = true;
     clearButton.disabled = true;
-  } else {
-    revertFun.disabled = quill1.getText().trim().length === 0;
-    clearButton.disabled = quill1.getText().trim().length === 0;
+    return;
   }
+
+  // Default behavior: Update based on editor content and history
+  const hasContent = quill1.getText().trim().length > 0;
+  const history = quill1.history;
+
+  clearButton.disabled = !hasContent; // Clear button enabled if there's content
+  revertFun.disabled = !history.stack.undo.length; // Undo enabled if there are undoable actions
+  forwardFun.disabled = !history.stack.redo.length; // Redo enabled if there are redoable actions
 }
 
+// Update button states whenever the editor content changes
+quill1.on("text-change", updateButtonStates);
+
+// Initial update to set correct button states
+updateButtonStates();
+
+// Wrapper function to ensure compatibility with existing calls
+function updateButtonStates() {
+  updateClearRevertButtonState();
+}
 // Function to handle clear operation
 function handleClear() {
   stopSpeaking();
@@ -3541,7 +3625,7 @@ function findTextPositionInHtml(html, targetTextLength) {
 
 /* ─────────────────────────── robust splitter ────────────────────────────
    - Split an HTML string into 1-5 nearly-even parts **without** cutting
-     through “atomic” blocks such as lists and tables.                     */
+     through "atomic" blocks such as lists and tables.                     */
 function robustHtmlDivider(htmlContent, maxLength = 500, targetSplits = 2) {
   /* ---------- helpers ---------- */
   const getTextLen = (node) => node.textContent.length;
@@ -3599,7 +3683,7 @@ function robustHtmlDivider(htmlContent, maxLength = 500, targetSplits = 2) {
       bestDist = Infinity;
     for (let i = 0; i < cum.length; i++) {
       if (taken.has(i)) continue;
-      if (atomic.has(nodes[i].nodeName)) continue; // don’t cut list/table itself
+      if (atomic.has(nodes[i].nodeName)) continue; // don't cut list/table itself
       const dist = Math.abs(cum[i] - ideal);
       if (dist < bestDist) {
         bestDist = dist;
@@ -3617,7 +3701,7 @@ function robustHtmlDivider(htmlContent, maxLength = 500, targetSplits = 2) {
   }
   cuts.sort((a, b) => a - b);
 
-  /* sanity check – if we didn’t manage to find enough boundaries,
+  /* sanity check – if we didn't manage to find enough boundaries,
        fall back to a simple no-split behaviour */
   if (cuts.length !== ideals.length) return [htmlContent];
 
@@ -3927,7 +4011,7 @@ function removeHamDanTags(htmlContent) {
   // Select every <ham-dan> element once, snapshotting into an array so we can modify safely
   Array.from(tempDiv.querySelectorAll("ham-dan")).forEach((hamDan) => {
     if (hamDan.classList.contains("grammar-correction-removed")) {
-      // ① If it’s marked for removal, drop the entire element (and anything inside it)
+      // ① If it's marked for removal, drop the entire element (and anything inside it)
       hamDan.remove();
     } else {
       // ② Otherwise unwrap it, preserving its children
@@ -6397,7 +6481,7 @@ function createGenderSelector() {
   maleIcon.className = "gender-icon-divs";
   maleIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 327.54 512">
                         <path fill="#bcbc50" d="M199.17,340.98c1.63.31,3.26.66,4.84,1.14s3.11.97,4.52,1.71c21.22,11.18,42.48,22.42,63.43,34.08,12.64,7.04,25.15,14.25,37.4,21.95,7.29,4.58,20.58,23.21,17.81,32.12-30.31,39.21-72.06,65.4-120.81,75.68l-24.19,4.31h-3c-1.58-.79-3.41-.8-5,0h-2c-1.58-.79-3.41-.8-5,0h-12c-2.24-.84-4.76-.84-7,0-.98-.07-2.02.09-3,0-56.19-5.33-111.08-36.41-145-81-1.18-5.77,4.24-13.64,7.74-18.64,4.46-6.39,9.76-12.06,16.27-16.44l102.97-56.09,2.02,1.18,2.05,1.36c-2.46,52.93,68.51,52.88,65.69-.04l2.26-1.32Z"/>
-                        <path fill="#343c4a" d="M188.17,0c4.08,1.59,8.31,2.35,12.36,4.14,29.91,13.24,28.98,50.96,75.13,46.84,8.01-.72,31.17-9.42,36.25-7.25,9.92,4.25.02,24.41-3.56,30.93-6.01,10.95-19.64,27.3-29.17,35.33l-1.63,3.9c-42.23,33.93-96.92,15.5-140.65-4.52-27.62-13.47-54.43-7.2-71.06,19.22-2.71,4.08-5.6,5.55-8.66,4.39-2.49,1.13-7.36-2.4-7.73-4.45-.11-.6,2.58.26-.27,1.45C-5.06,81.12,38.96-10.7,112.37,3.3c7.8,1.49,20.63,8.82,26.31,8.79,5.19-.03,10.01-4.68,14.97-6.11l19.52-5.98h15Z"/>
+                        <path fill="#343c4a" d="M188.17,0c4.08,1.59,8.31,2.35,12.36,4.14,29.91,13.24,28.98,50.96,75.13,46.84,8.01-.72,31.17-9.42,36.25,7.25,9.92,4.25.02,24.41-3.56,30.93-6.01,10.95-19.64,27.3-29.17,35.33l-1.63,3.9c-42.23,33.93-96.92,15.5-140.65-4.52-27.62-13.47-54.43-7.2-71.06,19.22-2.71,4.08-5.6,5.55-8.66,4.39-2.49,1.13-7.36-2.4-7.73-4.45-.11-.6,2.58.26-.27,1.45C-5.06,81.12,38.96-10.7,112.37,3.3c7.8,1.49,20.63,8.82,26.31,8.79,5.19-.03,10.01-4.68,14.97-6.11l19.52-5.98h15Z"/>
                         <path fill="#dbd69c" d="M155.17,511.97h-7c1.26-1.65,5.74-1.65,7,0Z"/>
                         <path fill="#c3c464" d="M172.17,511.97h-5c.66-1.58,4.34-1.58,5,0Z"/>
                         <path fill="#dbd79d" d="M179.17,511.97h-5c.66-1.58,4.34-1.58,5,0Z"/>
@@ -7483,7 +7567,7 @@ function formatMarkdownOutput(htmlContent) {
 
 function onResponseGenerated(newResponse) {
   // Remove all backslashes from the newResponse
-  ////// console.log("newResponse", newResponconst html = marked.parse(newResponse);
+  ////// console.log("newResponse", newResponse);
   const html = marked.parse(newResponse);
   const safeHTML = DOMPurify.sanitize(html);
 
@@ -7517,6 +7601,7 @@ function displaySavedResponses() {
   historyLoader(true);
   getSavedResponses()
     .then((savedResponses) => {
+      console.log("Number of responses fetched:", savedResponses.length);
       const savedResponsesList = document.getElementById("savedResponsesList");
       const clearHistoryButton = document.getElementById("deleteAllHistory");
       savedResponsesList.innerHTML = "";
@@ -8024,7 +8109,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 let originalZIndex;
-const sidebarSelector = ".elementor-element-4ee0df9";
+const sidebarSelector = ".elementor-element-3189719";
 const popupSelector = "#savedResponsesPopup";
 const popupContentSelector = ".popup-content";
 // Flag to track if popup is already being opened
@@ -8087,7 +8172,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("showSavedResponsesBtn")
     .addEventListener("click", openPopup);
-  ////// console.log("Event listener attached to showSavedResponsesBtn");
 });
 
 document.querySelector(".close").addEventListener("click", closePopup);
@@ -8460,7 +8544,7 @@ function stripGrammarRemoved(delta) {
 // Perfect DOCX with fixed font and perfect lists
 async function downloadDocx() {
   try {
-    // ① Grab the editor’s raw Delta
+    // ① Grab the editor's raw Delta
     const originalDelta = quill1.getContents();
     console.log("Before cleaning:", JSON.stringify(originalDelta, null, 2));
 
@@ -10188,37 +10272,17 @@ console.log("Selection toolbar script loaded");
 
 document.addEventListener("DOMContentLoaded", function () {
   const correctionSidebar = document.querySelector(".correction-sidebar");
-  const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
-
-  let isCollapsed = false;
+  const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
 
   sidebarToggleBtn.addEventListener("click", function () {
-    isCollapsed = !isCollapsed;
-    correctionSidebar.classList.toggle("collapsed", isCollapsed);
+    correctionSidebar.classList.toggle("collapsed");
 
-    // Optionally change the icon (plus/minus) on the button
-    sidebarToggleBtn.innerHTML = isCollapsed
-      ? '<svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 4v12" stroke="#929292" stroke-width="2" stroke-linecap="round"/></svg>'
-      : '<svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" stroke="#929292" stroke-width="2" stroke-linecap="round"/></svg>';
+    // Update the toggle icon (using the original SVG path logic)
+    const svgPath = sidebarToggleBtn.querySelector("path");
+    if (correctionSidebar.classList.contains("collapsed")) {
+      svgPath.setAttribute("d", "M4.66634 11.8333H6.66634V13.8333H4.66634V11.8333M11.333 5.16665H9.33301V3.16665H11.333V5.16665");
+    } else {
+      svgPath.setAttribute("d", "M4.66634 11.8333H2.66634V13.8333H4.66634V11.8333M11.333 5.16665H13.333V3.16665H11.333V5.16665");
+    }
   });
-});
-
-// Toggle sidebar collapse manually
-document.addEventListener("DOMContentLoaded", () => {
-  const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
-  const sidebar = document.querySelector(".correction-sidebar");
-
-  if (sidebarToggleBtn && sidebar) {
-    sidebarToggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("collapsed");
-
-      // Flip the icon (optional)
-      const icon = sidebarToggleBtn.querySelector("polyline");
-      if (sidebar.classList.contains("collapsed")) {
-        icon.setAttribute("points", "9 18 15 12 9 6"); // chevron-right
-      } else {
-        icon.setAttribute("points", "15 18 9 12 15 6"); // chevron-left
-      }
-    });
-  }
 });

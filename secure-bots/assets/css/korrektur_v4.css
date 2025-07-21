@@ -299,7 +299,8 @@
   transition: height 0.3s ease-in-out;
   box-sizing: border-box;
   align-items: stretch;
-  gap: 10px;
+  gap: 20px;
+  border-radius: 0%;
 }
 
 .text-area-container > .main-textarea-section {
@@ -333,10 +334,9 @@
   gap: 12px;
   background-color: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  min-height: 420px;
-  max-height: none;
+  min-height: 44vh;
+  max-height: 44vh;
   flex-shrink: 0;
-  overflow: hidden;
 }
 
 /* ---------------------------------- left cantainer   ---------------------------- */
@@ -366,20 +366,21 @@
   align-items: center;
 }
 
-.control-btn,
-.revertForward {
+.control-btn {
   padding: 4px;
-  border-radius: 100px;
-  border: 1px solid var(--Text-Primary-Dark, #e4e4e4);
-  background: linear-gradient(139deg, #fff 12.36%, #f8f9fa 94.3%);
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04),
-    0px 1px 1px 0px rgba(255, 255, 255, 0.9) inset;
+
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   margin: 0 8px 0 0; /* Space between buttons */
   cursor: pointer;
+
+  border-radius: 100px;
+  border: 1px solid var(--Text-Primary-Dark, #e4e4e4);
+  background: linear-gradient(139deg, #fff 12.36%, #f8f9fa 94.3%);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04),
+    0px 1px 1px 0px rgba(255, 255, 255, 0.9) inset;
 }
 
 .control-btn:last-child {
@@ -428,9 +429,10 @@
 .undo-redo-container {
   display: flex;
   border-radius: 100px;
-border: 1px solid var(--Text-Primary-Dark, #E4E4E4);
-background: linear-gradient(139deg, #FFF 12.36%, #F8F9FA 94.3%);
-box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--Text-Primary-Dark, #e4e4e4);
+  background: linear-gradient(139deg, #fff 12.36%, #f8f9fa 94.3%);
+  box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.9) inset,
+    0px 1px 3px 0px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   margin: 0 12px;
 }
@@ -438,8 +440,9 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
 .undo-btn,
 .redo-btn {
   padding: 5px;
-  background: #fff;
-  border: none;
+  background: linear-gradient(139deg, #fff 12.36%, #f8f9fa 94.3%);
+  box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.9) inset,
+    0px 1px 3px 0px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -481,7 +484,6 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
   font-family: "Poppins", sans-serif;
   text-align: left;
   line-height: 1.6;
-  padding: 16px 20px;
   box-sizing: border-box;
   overflow-y: auto;
   resize: none;
@@ -542,45 +544,51 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
   display: none;
 }
 
+/* ========== COLLAPSED SIDEBAR STYLES ========== */
 .correction-sidebar.collapsed {
+  /* Layout */
   max-width: 64px !important;
   min-width: 64px !important;
   width: 64px !important;
-  padding: 12px 6px;
-  overflow: hidden;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+
+  /* Spacing */
+  padding: 16px 0 0 0;
+  gap: 0;
+
+  /* Overflow */
+  overflow: hidden;
+
+  /* Border */
+  border-bottom: none;
 }
 
+/* Adjust the main textarea width when sidebar is collapsed */
 .text-area-container .correction-sidebar.collapsed + .main-textarea-section {
   flex-basis: calc(100% - 64px) !important;
 }
 
-.correction-sidebar.collapsed {
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 16px 0 0 0;
-  border-bottom: none;
-  gap: 0;
-}
-
+/* Sidebar toggle button */
 .correction-sidebar.collapsed .sidebar-toggle-btn {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Dropdown container inside collapsed sidebar */
 .correction-sidebar.collapsed .hk-dropdown-container {
-  width: 100%;
-  max-width: none;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: none;
   margin: 0;
   padding: 0;
 }
 
+/* Dropdown button styles */
 .correction-sidebar.collapsed .hk-dropdown-button {
   width: 48px;
   height: 48px;
@@ -588,8 +596,8 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
   min-height: 48px;
   max-width: 48px;
   max-height: 48px;
-  padding: 0;
   margin: 0 auto 24px auto;
+  padding: 0;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -599,7 +607,9 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
   box-shadow: none;
 }
 
-.correction-sidebar.collapsed .hk-dropdown-button .selected-option {
+/* Selected option inside dropdown button */
+.correction-sidebar.collapsed .hk-dropdown-button .selected-option,
+.correction-sidebar.collapsed .selected-option {
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -608,25 +618,16 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
   height: 100%;
 }
 
-.correction-sidebar.collapsed .hk-dropdown-button svg {
+/* SVG styles */
+.correction-sidebar.collapsed .hk-dropdown-button svg,
+.correction-sidebar.collapsed .hk-dropdown-container svg {
   margin: 0;
   width: 24px;
   height: 24px;
   display: block;
 }
 
-.correction-sidebar.collapsed .selected-option {
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  justify-content: center;
-}
-
-.correction-sidebar.collapsed .hk-dropdown-container svg {
-  margin: 0;
-  display: block;
-}
-
+/* Hide unused elements in collapsed state */
 .correction-sidebar.collapsed .hk-dropdown-text,
 .correction-sidebar.collapsed .hk-dropdown-arrow,
 .correction-sidebar.collapsed .hk-dropdown-content,
@@ -2043,14 +2044,18 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
   background-color: #f9f9f9;
   padding: 20px;
   border: 1px solid #888;
-  width: 60%;
-  height: 80%;
+  width: 90%;
+  height: auto;
+  max-height: 1000px;
+  margin: 15% auto;
+  overflow: scroll;
+  position: relative;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  position: relative;
   display: flex;
   flex-direction: column;
 }
+
 
 .hClose {
   flex-shrink: 0;
@@ -2061,12 +2066,13 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
 }
 
 #savedResponsesList {
-  flex-grow: 1;
+  display: grid;
+  background-color: #F8F9FA;;
+padding: 10px;
+gap: 10px;
+align-self: stretch;
+  flex-grow: 0.1;
   overflow-y: auto;
-  margin: 0 -10px;
-  /* Adjust as needed */
-  padding: 0 10px;
-  padding-right: 4px;
   /* Adjust as needed */
 }
 
@@ -2078,24 +2084,26 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
 /* Rest of your existing CSS remains the same */
 .close {
   cursor: pointer;
-  margin-right: -12px;
+  margin-right: 12px;
 }
 
 .close:hover,
 .close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+  border-radius: 2px;
+border: 1px solid var(--Text-Primary-Dark, #E4E4E4);
+background: linear-gradient(139deg, #FFF 12.36%, #F8F9FA 94.3%);
+box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04), 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset;
 }
 
 .saved-response {
+  border-radius: 10px;
+  border: 1px solid rgba(222, 226, 230, 0.01);
+  background: #f8f9fa;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04),
+    0px 2px 8px 0px rgba(0, 0, 0, 0.06);
   margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid #e6e6e6;
-  border-radius: 8px;
   color: black;
-  border-color: #e6e6e6;
-  background-color: #ffffff;
   padding: 13px !important;
 }
 
@@ -2115,9 +2123,14 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
 #popup-heading {
   margin: 0;
   padding: 0;
-  font-size: 16px;
-  font-weight: 400;
-  color: #626262;
+  color: var(--Text-Primary, #495057);
+
+  /* Headings/H2 Primary Heading */
+  font-family: Poppins;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px; /* 114.286% */
   margin-top: 1px;
 }
 
@@ -2184,16 +2197,22 @@ textarea.no-min-height {
 }
 
 .del-history-text {
-  color: #e35071;
-  font-size: 16px;
+  color: var(--Brand-Primary, #E24668);
+
+/* UI/Meta Text */
+font-family: Poppins;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 16px; /* 133.333% */
   cursor: pointer;
 }
 
 .delete-all-history {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 10px;
+  margin-left: 10px;
 }
 
 .loader2 {
@@ -2280,8 +2299,10 @@ textarea.no-min-height {
 
 .copy-btn1:hover,
 .delete-btns:hover {
-  background: #e0e0e0;
   border-radius: 4px;
+border: 1px solid var(--Text-Primary-Dark, #E4E4E4);
+background: linear-gsradient(139deg, #FFF 12.36%, #F8F9FA 94.3%);
+box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04), 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset;
 }
 
 .copy-btn1,
@@ -2333,9 +2354,14 @@ textarea.no-min-height {
 }
 
 .markdown-body {
-  background-color: #fff !important;
-  color: #414141 !important;
-  font-size: 16px !important;
+  color: var(--Text-Muted, #6c757d);
+  background: transparent;
+  /* Body/Small */
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px; /* 140% */
 }
 
 .markdown-body table {
@@ -2357,11 +2383,8 @@ textarea.no-min-height {
 }
 
 .textarea-wrapper {
-  max-height: 61%;
+  max-height: 76%;
   background: #ffffff;
-  border: none;
-  border-radius: 12px;
-  padding: 10px;
   margin-bottom: 12px;
   transition: height 0.3s ease-in-out;
   display: flex;
@@ -2647,19 +2670,6 @@ textarea.no-min-height {
     padding: 12px;
   }
 
-  .popup-content {
-    background-color: #f9f9f9;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 90%;
-    height: 80%;
-    max-height: 1000px;
-    overflow: scroll;
-    position: relative;
-    border-radius: 10px;
-  }
-
   .correction-sidebar {
     display: none !important;
   }
@@ -2709,19 +2719,6 @@ textarea.no-min-height {
 
   .switch-label {
     font-size: 12px;
-  }
-
-  .popup-content {
-    background-color: #f9f9f9;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 90%;
-    height: 80%;
-    max-height: 1000px;
-    overflow: scroll;
-    position: relative;
-    border-radius: 10px;
   }
 
   .options-container {
@@ -2861,14 +2858,9 @@ textarea.no-min-height {
 }
 
 .ql-editor {
-  padding: 20px;
-  min-height: 150px;
-  max-height: 350px;
   overflow-y: auto;
   box-sizing: border-box;
   resize: none;
-  font-size: 16px;
-  line-height: 25px;
 }
 
 .ql-editor.ql-blank::before {
@@ -2950,12 +2942,6 @@ textarea.no-min-height {
   overflow-anchor: none;
 }
 
-.ql-container,
-.ql-editor {
-  overflow: visible !important;
-  max-height: none !important;
-}
-
 .ql-table-menus-container {
   display: none !important;
 }
@@ -2974,15 +2960,6 @@ textarea.no-min-height {
 
 /* CRITICAL CSS FIXES - Add these to your existing CSS or override existing rules */
 
-/* Remove hardcoded heights and !important declarations */
-.text-area-container {
-  /* Remove: height: 480px !important; min-height: 480px !important; max-height: none !important; */
-  min-height: 420px;
-  height: auto;
-  max-height: none;
-  transition: height 0.3s ease-in-out;
-  box-sizing: border-box;
-}
 
 .main-textarea-section {
   flex-basis: 74%;
@@ -3004,7 +2981,6 @@ textarea.no-min-height {
   flex: 1;
   border: none;
   border-radius: 12px;
-  max-height: 56%;
   overflow-y: none;
   transition: height 0.3s ease-in-out;
 }
@@ -3124,14 +3100,6 @@ textarea.no-min-height {
 
 /* Ensure Quill editor expands properly */
 .ql-container {
-
-}
-
-.ql-container,
-.ql-editor {
-
-  /* Override Quill's default overflow */
-  max-height: none !important;
 }
 
 .ql-editor {
@@ -3684,4 +3652,26 @@ input:focus-visible,
 .py-2 {
   padding-top: 8px !important;
   padding-bottom: 8px !important;
+}
+
+.ql-container {
+  max-height: 350px;
+  height: 350px;
+  overflow-y: auto;
+}
+.ql-editor {
+  min-height: 150px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.text-area-container,
+.main-textarea-section,
+.correction-sidebar {
+  overflow-y: auto;
+  /* Remove min-height and max-height for natural layout */
+}
+
+.correction-sidebar {
+  /* Remove min-height and max-height restrictions */
 }
