@@ -248,7 +248,6 @@ const quill1 = new Quill("#inputText", {
     "Skriv eller indtal din tekst for at rette grammatikken på dansk…",
 });
 
-
 const clearButton = document.querySelector("#clearBtn");
 const revertFun = document.querySelector("#revertBack");
 const forwardFun = document.querySelector("#forwardButton");
@@ -264,17 +263,21 @@ const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 const needsScrollHandling = isMobile || isSafari;
 
-
-
 // Log initialization status
 console.log("Initializing undo/redo buttons...");
 console.log("revertFun (undo button):", revertFun ? "Found" : "Not found");
 console.log("forwardFun (redo button):", forwardFun ? "Found" : "Not found");
 console.log("clearButton:", clearButton ? "Found" : "Not found");
-console.log("quill1:", quill1 ? "Quill editor initialized" : "Quill editor not initialized");
-console.log("quill1.history:", quill1 && quill1.history ? "History module available" : "History module not available");
-
-
+console.log(
+  "quill1:",
+  quill1 ? "Quill editor initialized" : "Quill editor not initialized"
+);
+console.log(
+  "quill1.history:",
+  quill1 && quill1.history
+    ? "History module available"
+    : "History module not available"
+);
 
 // ========================================== Revert back (undo) btn ===============================================
 if (revertFun) {
@@ -284,7 +287,12 @@ if (revertFun) {
     try {
       if (quill1 && quill1.history) {
         quill1.history.undo();
-        console.log("Undo action performed. Undo stack:", quill1.history.stack.undo.length, "Redo stack:", quill1.history.stack.redo.length);
+        console.log(
+          "Undo action performed. Undo stack:",
+          quill1.history.stack.undo.length,
+          "Redo stack:",
+          quill1.history.stack.redo.length
+        );
         updateClearRevertButtonState(); // <-- Added to update button states after undo
       } else {
         console.error("Undo failed: quill1 or quill1.history is undefined");
@@ -305,7 +313,12 @@ if (forwardFun) {
     try {
       if (quill1 && quill1.history) {
         quill1.history.redo();
-        console.log("Redo action performed. Undo stack:", quill1.history.stack.undo.length, "Redo stack:", quill1.history.stack.redo.length);
+        console.log(
+          "Redo action performed. Undo stack:",
+          quill1.history.stack.undo.length,
+          "Redo stack:",
+          quill1.history.stack.redo.length
+        );
         updateClearRevertButtonState(); // <-- Added to update button states after redo
       } else {
         console.error("Redo failed: quill1 or quill1.history is undefined");
@@ -317,8 +330,6 @@ if (forwardFun) {
 } else {
   console.error("Redo button (#forwardButton) not found in DOM");
 }
-
-
 
 /* ------------------------------------------------------------------ 4  Clipboard matchers */
 function mark(attr) {
@@ -526,7 +537,6 @@ function actionOnToggle(toggleState) {
   // Show/hide legend dots
   let legendDots = document.querySelector("#legend-section");
   legendDots.style.display = toggleState ? "flex" : "none";
-
 
   hideUnderlines(toggleState);
   callSidebar();
@@ -1154,13 +1164,15 @@ document.querySelector("#genBtn").addEventListener("click", async () => {
 
     // Start sidebar (explanations) - this will handle .correction-message loader and analyseLoader
     callSidebar();
-
     adjustInputTextareaHeight();
+
+    legendSection.classList.remove("legend-working");
   } catch (error) {
     console.error("Processing error:", error);
     hideLoader(".textarea-wrapper");
     hideLoader(".correction-message");
     analyseLoader(false);
+    legendSection.classList.remove("legend-working"); // <-- Add this here too!
   }
 });
 
@@ -1724,6 +1736,9 @@ function displayResponse(content, scroll = true) {
   // 6. Restore behaviors and UI state
   hideUnderlines(toggleState);
   updateGenerateButtonState();
+
+  // Show the options container after displaying the correction/result
+  document.querySelector(".options-container").style.display = "block";
 }
 
 const grammerApi = async (type, params) => {
@@ -10289,6 +10304,68 @@ document.addEventListener("DOMContentLoaded", () => {
         if (icon) icon.setAttribute("points", "15 18 9 12 15 6"); // chevron-left
         headerSection.style.flexWrap = "nowrap";
       }
+    });
+  }
+});
+
+const legendSection = document.querySelector(".legend-section");
+const genBtn = document.querySelector("#genBtn");
+
+legendSection.addEventListener("click", async function () {
+  // 1. Show working state
+  legendSection.classList.add("legend-working");
+
+  // 2. Trigger the real correction logic (simulate a click on the "Ret teksten" button)
+  // If you want to reuse the same logic, just call the click handler:
+  genBtn.click();
+});
+
+function selectSidebarOption(option) {
+  // 1. Update dropdown text
+  const dropdownText = document.querySelector(".hk-dropdown-text");
+  if (dropdownText) dropdownText.textContent = option;
+
+  // 2. Set active state for sidebar icons
+  document.querySelectorAll(".sidebar-icon-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.getAttribute("data-option") === option);
+  });
+
+  // 3. Set active state for dropdown options
+  document.querySelectorAll(".hk-dropdown-option").forEach((opt) => {
+    opt.classList.toggle("active", opt.textContent.trim() === option);
+  });
+
+  // 4. Show/hide panels (customize as needed)
+  // Example: show/hide .improv-inner, .correction-inner, .style-inner, etc.
+  if (option === "Grammatik") {
+    document.querySelector(".improv-inner").style.display = "flex";
+    document.querySelector(".correction-inner").style.display = "none";
+    document.querySelector(".style-inner").style.display = "none";
+  } else if (option === "Teksthjælp") {
+    document.querySelector(".improv-inner").style.display = "none";
+    document.querySelector(".correction-inner").style.display = "flex";
+    document.querySelector(".style-inner").style.display = "none";
+  } else if (option === "Opsætning") {
+    document.querySelector(".improv-inner").style.display = "none";
+    document.querySelector(".correction-inner").style.display = "none";
+    document.querySelector(".style-inner").style.display = "flex";
+  } else if (option === "Tone") {
+    // Add your logic for Tone panel
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebarToggleBtn = document.querySelector(".sidebar-toggle-btn");
+  const correctionToggle = document.getElementById("correction-toggle");
+
+  if (sidebarToggleBtn && correctionToggle) {
+    sidebarToggleBtn.addEventListener("click", () => {
+      // Toggle the switch state
+      correctionToggle.checked = !correctionToggle.checked;
+      toggleState = correctionToggle.checked;
+      setCookie("korrektur-toggle", toggleState, 30);
+      actionOnToggle(toggleState);
     });
   }
 });
