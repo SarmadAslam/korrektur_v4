@@ -10270,19 +10270,25 @@ window.addEventListener("beforeunload", function () {
 
 console.log("Selection toolbar script loaded");
 
-document.addEventListener("DOMContentLoaded", function () {
-  const correctionSidebar = document.querySelector(".correction-sidebar");
+// Toggle sidebar collapse manually
+document.addEventListener("DOMContentLoaded", () => {
   const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
+  const sidebar = document.querySelector(".correction-sidebar");
+  const headerSection = document.querySelector(".header-section");
 
-  sidebarToggleBtn.addEventListener("click", function () {
-    correctionSidebar.classList.toggle("collapsed");
+  if (sidebarToggleBtn && sidebar && headerSection) {
+    sidebarToggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("collapsed");
 
-    // Update the toggle icon (using the original SVG path logic)
-    const svgPath = sidebarToggleBtn.querySelector("path");
-    if (correctionSidebar.classList.contains("collapsed")) {
-      svgPath.setAttribute("d", "M4.66634 11.8333H6.66634V13.8333H4.66634V11.8333M11.333 5.16665H9.33301V3.16665H11.333V5.16665");
-    } else {
-      svgPath.setAttribute("d", "M4.66634 11.8333H2.66634V13.8333H4.66634V11.8333M11.333 5.16665H13.333V3.16665H11.333V5.16665");
-    }
-  });
+      // Flip the icon (optional)
+      const icon = sidebarToggleBtn.querySelector("polyline");
+      if (sidebar.classList.contains("collapsed")) {
+        if (icon) icon.setAttribute("points", "9 18 15 12 9 6"); // chevron-right
+        headerSection.style.flexWrap = "wrap";
+      } else {
+        if (icon) icon.setAttribute("points", "15 18 9 12 15 6"); // chevron-left
+        headerSection.style.flexWrap = "nowrap";
+      }
+    });
+  }
 });
