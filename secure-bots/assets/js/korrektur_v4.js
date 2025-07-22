@@ -248,6 +248,7 @@ const quill1 = new Quill("#inputText", {
     "Skriv eller indtal din tekst for at rette grammatikken på dansk…",
 });
 
+
 const clearButton = document.querySelector("#clearBtn");
 const revertFun = document.querySelector("#revertBack");
 const forwardFun = document.querySelector("#forwardButton");
@@ -263,21 +264,17 @@ const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 const needsScrollHandling = isMobile || isSafari;
 
+
+
 // Log initialization status
 console.log("Initializing undo/redo buttons...");
 console.log("revertFun (undo button):", revertFun ? "Found" : "Not found");
 console.log("forwardFun (redo button):", forwardFun ? "Found" : "Not found");
 console.log("clearButton:", clearButton ? "Found" : "Not found");
-console.log(
-  "quill1:",
-  quill1 ? "Quill editor initialized" : "Quill editor not initialized"
-);
-console.log(
-  "quill1.history:",
-  quill1 && quill1.history
-    ? "History module available"
-    : "History module not available"
-);
+console.log("quill1:", quill1 ? "Quill editor initialized" : "Quill editor not initialized");
+console.log("quill1.history:", quill1 && quill1.history ? "History module available" : "History module not available");
+
+
 
 // ========================================== Revert back (undo) btn ===============================================
 if (revertFun) {
@@ -287,12 +284,7 @@ if (revertFun) {
     try {
       if (quill1 && quill1.history) {
         quill1.history.undo();
-        console.log(
-          "Undo action performed. Undo stack:",
-          quill1.history.stack.undo.length,
-          "Redo stack:",
-          quill1.history.stack.redo.length
-        );
+        console.log("Undo action performed. Undo stack:", quill1.history.stack.undo.length, "Redo stack:", quill1.history.stack.redo.length);
         updateClearRevertButtonState(); // <-- Added to update button states after undo
       } else {
         console.error("Undo failed: quill1 or quill1.history is undefined");
@@ -313,12 +305,7 @@ if (forwardFun) {
     try {
       if (quill1 && quill1.history) {
         quill1.history.redo();
-        console.log(
-          "Redo action performed. Undo stack:",
-          quill1.history.stack.undo.length,
-          "Redo stack:",
-          quill1.history.stack.redo.length
-        );
+        console.log("Redo action performed. Undo stack:", quill1.history.stack.undo.length, "Redo stack:", quill1.history.stack.redo.length);
         updateClearRevertButtonState(); // <-- Added to update button states after redo
       } else {
         console.error("Redo failed: quill1 or quill1.history is undefined");
@@ -330,6 +317,8 @@ if (forwardFun) {
 } else {
   console.error("Redo button (#forwardButton) not found in DOM");
 }
+
+
 
 /* ------------------------------------------------------------------ 4  Clipboard matchers */
 function mark(attr) {
@@ -538,6 +527,7 @@ function actionOnToggle(toggleState) {
   let legendDots = document.querySelector("#legend-section");
   legendDots.style.display = toggleState ? "flex" : "none";
 
+
   hideUnderlines(toggleState);
   callSidebar();
 
@@ -567,6 +557,83 @@ function actionOnToggle(toggleState) {
 
   adjustInputTextareaHeight();
 }
+
+// Sidebar toggle button should perform the same logic as the toolbar switch
+const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
+if (sidebarToggleBtn) {
+  sidebarToggleBtn.addEventListener("click", () => {
+    // Toggle the state (invert current toggleState)
+    toggleState = !toggleState;
+
+    // If the switch exists, sync its checked state (for robustness)
+    const correctionSwitch = document.getElementById("correction-toggle");
+    if (correctionSwitch) {
+      correctionSwitch.checked = toggleState;
+    }
+
+    // Set cookie if changed
+    if (toggleState !== cookieToggleState) {
+      setCookie("korrektur-toggle", toggleState, 30);
+    }
+
+    // Call the main toggle action
+    actionOnToggle(toggleState);
+  });
+}
+
+
+
+// --- Sidebar collapse/expand icon and icons row handling ---
+// ... existing code ...
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
+  const sidebar = document.querySelector(".correction-sidebar");
+  const sidebarIcons = document.querySelector(".sidebar-collapsed-icons");
+  const toggleIconSpan = sidebarToggleBtn ? sidebarToggleBtn.querySelector('.sidebar-toggle-icon') : null;
+
+  // SVGs as strings
+  const expandSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none"><mask id="path-1-inside-1_6151_1083" fill="white"><path d="M1.66634 8.83331H3.66634C3.85523 8.83331 4.01367 8.89731 4.14167 9.02531C4.26967 9.15331 4.33345 9.31154 4.33301 9.49998C4.33256 9.68842 4.26856 9.84687 4.14101 9.97531C4.01345 10.1038 3.85523 10.1675 3.66634 10.1666H0.999674C0.810786 10.1666 0.652563 10.1026 0.525008 9.97465C0.397452 9.84665 0.333452 9.68842 0.333008 9.49998V6.83331C0.333008 6.64442 0.397008 6.4862 0.525008 6.35865C0.653008 6.23109 0.81123 6.16709 0.999674 6.16665C1.18812 6.1662 1.34656 6.2302 1.47501 6.35865C1.60345 6.48709 1.66723 6.64531 1.66634 6.83331V8.83331ZM8.33301 2.16665H6.33301C6.14412 2.16665 5.9859 2.10265 5.85834 1.97465C5.73079 1.84665 5.66679 1.68842 5.66634 1.49998C5.6659 1.31154 5.7299 1.15331 5.85834 1.02531C5.98679 0.897313 6.14501 0.833313 6.33301 0.833313H8.99967C9.18856 0.833313 9.34701 0.897313 9.47501 1.02531C9.60301 1.15331 9.66679 1.31154 9.66634 1.49998V4.16665C9.66634 4.35554 9.60234 4.51398 9.47434 4.64198C9.34634 4.76998 9.18812 4.83376 8.99967 4.83331C8.81123 4.83287 8.65301 4.76887 8.52501 4.64131C8.39701 4.51376 8.33301 4.35554 8.33301 4.16665V2.16665Z"/></mask><path d="M1.66634 8.83331H-0.333659V10.8333H1.66634V8.83331ZM4.33301 9.49998L6.333 9.5047L4.33301 9.49998ZM3.66634 10.1666L3.67575 8.16665H3.66634V10.1666ZM0.333008 9.49998L-1.667 9.49998L-1.66699 9.5047L0.333008 9.49998ZM1.66634 6.83331L-0.333659 6.82386V6.83331H1.66634ZM8.33301 2.16665H10.333V0.166646H8.33301V2.16665ZM9.66634 1.49998L7.66634 1.49526V1.49998H9.66634ZM8.99967 4.83331L8.99496 6.83331L8.99967 4.83331ZM1.66634 8.83331V10.8333H3.66634V8.83331V6.83331H1.66634V8.83331ZM3.66634 8.83331V10.8333C3.53116 10.8333 3.36048 10.8095 3.17779 10.7357C2.9934 10.6613 2.84193 10.554 2.72746 10.4395L4.14167 9.02531L5.55589 7.6111C5.03502 7.09023 4.35996 6.83331 3.66634 6.83331V8.83331ZM4.14167 9.02531L2.72746 10.4395C2.61301 10.3251 2.5053 10.1732 2.43054 9.9877C2.35643 9.80384 2.33269 9.63183 2.33301 9.49526L4.33301 9.49998L6.333 9.5047C6.33464 8.80855 6.077 8.13221 5.55589 7.6111L4.14167 9.02531ZM4.33301 9.49998L2.33301 9.49526C2.33333 9.36062 2.35733 9.19161 2.43024 9.01109C2.50379 8.82901 2.60937 8.67933 2.72189 8.56602L4.14101 9.97531L5.56012 11.3846C6.0752 10.8659 6.33137 10.1955 6.333 9.5047L4.33301 9.49998ZM4.14101 9.97531L2.72189 8.56602C2.83748 8.44963 2.99117 8.3402 3.17895 8.26451C3.36498 8.18952 3.53866 8.16602 3.67575 8.16667L3.66634 10.1666L3.65693 12.1666C4.35587 12.1699 5.03684 11.9115 5.56012 11.3846L4.14101 9.97531ZM3.66634 10.1666V8.16665H0.999674V10.1666V12.1666H3.66634V10.1666ZM0.999674 10.1666V8.16665C1.13482 8.16665 1.30593 8.19041 1.4893 8.26458C1.67444 8.33947 1.82663 8.44745 1.94168 8.56289L0.525008 9.97465L-0.891663 11.3864C-0.370306 11.9096 0.305986 12.1666 0.999674 12.1666V10.1666ZM0.525008 9.97465L1.94168 8.56289C2.05517 8.67679 2.16145 8.82718 2.23541 9.01002C2.3087 9.19122 2.33268 9.36066 2.333 9.49526L0.333008 9.49998L-1.66699 9.5047C-1.66536 10.1956 -1.40903 10.8672 -0.891663 11.3864L0.525008 9.97465ZM0.333008 9.49998H2.33301V6.83331H0.333008H-1.66699V9.49998H0.333008ZM0.333008 6.83331H2.33301C2.33301 6.96846 2.30925 7.13957 2.23507 7.32294C2.16018 7.50808 2.05221 7.66027 1.93676 7.77532L0.525008 6.35865L-0.886744 4.94198C-1.40992 5.46333 -1.66699 6.13963 -1.66699 6.83331H0.333008ZM0.525008 6.35865L1.93676 7.77532C1.82287 7.88881 1.67247 7.99509 1.48963 8.06905C1.30844 8.14234 1.139 8.16632 1.00439 8.16664L0.999674 6.16665L0.994958 4.16665C0.30408 4.16828 -0.367579 4.42461 -0.886744 4.94198L0.525008 6.35865ZM0.999674 6.16665L1.00439 8.16664C0.866919 8.16697 0.694556 8.14297 0.510785 8.06874C0.325538 7.99392 0.174343 7.88641 0.0607942 7.77286L1.47501 6.35865L2.88922 4.94443C2.36911 4.42432 1.69323 4.16501 0.994958 4.16665L0.999674 6.16665ZM1.47501 6.35865L0.0607942 7.77286C-0.052732 7.65933 -0.160685 7.5077 -0.235796 7.32137C-0.310343 7.13643 -0.334293 6.96272 -0.333636 6.82386L1.66634 6.83331L3.66632 6.84277C3.66963 6.14195 3.40957 5.46478 2.88922 4.94443L1.47501 6.35865ZM1.66634 6.83331H-0.333659V8.83331H1.66634H3.66634V6.83331H1.66634ZM8.33301 2.16665V0.166646H6.33301V2.16665V4.16665H8.33301V2.16665ZM6.33301 2.16665V0.166646C6.46815 0.166646 6.63927 0.190409 6.82263 0.26458C7.00778 0.339469 7.15997 0.447449 7.27501 0.562894L5.85834 1.97465L4.44167 3.3864C4.96303 3.90957 5.63932 4.16665 6.33301 4.16665V2.16665ZM5.85834 1.97465L7.27501 0.562894C7.38851 0.676786 7.49478 0.827183 7.56874 1.01002C7.64203 1.19122 7.66602 1.36066 7.66634 1.49526L5.66634 1.49998L3.66635 1.5047C3.66798 2.19557 3.92431 2.86723 4.44167 3.3864L5.85834 1.97465ZM5.66634 1.49998L7.66634 1.49526C7.66666 1.63269 7.64268 1.80549 7.56807 1.98994C7.49284 2.17594 7.38462 2.32786 7.2701 2.44198L5.85834 1.02531L4.44658 -0.391349C3.92417 0.129254 3.6647 0.80635 3.66635 1.5047L5.66634 1.49998ZM5.85834 1.02531L7.2701 2.44198C7.15713 2.55456 7.007 2.66107 6.8233 2.73538C6.64103 2.80911 6.4699 2.83331 6.33301 2.83331V0.833313V-1.16669C5.63749 -1.16669 4.965 -0.907975 4.44658 -0.391349L5.85834 1.02531ZM6.33301 0.833313V2.83331H8.99967V0.833313V-1.16669H6.33301V0.833313ZM8.99967 0.833313V2.83331C8.86449 2.83331 8.69381 2.80954 8.51112 2.73574C8.32673 2.66127 8.17526 2.554 8.06079 2.43953L9.47501 1.02531L10.8892 -0.3889C10.3684 -0.909765 9.69329 -1.16669 8.99967 -1.16669V0.833313ZM9.47501 1.02531L8.06079 2.43953C7.94635 2.32508 7.83863 2.17317 7.76387 1.9877C7.68976 1.80385 7.66602 1.63183 7.66635 1.49526L9.66634 1.49998L11.6663 1.5047C11.668 0.808545 11.4103 0.13221 10.8892 -0.3889L9.47501 1.02531ZM9.66634 1.49998H7.66634V4.16665H9.66634H11.6663V1.49998H9.66634ZM9.66634 4.16665H7.66634C7.66634 4.03146 7.69012 3.86078 7.76391 3.67809C7.83839 3.49371 7.94566 3.34224 8.06013 3.22777L9.47434 4.64198L10.8886 6.05619C11.4094 5.53533 11.6663 4.86026 11.6663 4.16665H9.66634ZM9.47434 4.64198L8.06013 3.22777C8.17458 3.11332 8.32648 3.0056 8.51196 2.93084C8.69581 2.85673 8.86782 2.833 9.00439 2.83332L8.99967 4.83331L8.99496 6.83331C9.6911 6.83495 10.3674 6.57731 10.8886 6.05619L9.47434 4.64198ZM8.99967 4.83331L9.00439 2.83332C9.139 2.83364 9.30844 2.85762 9.48963 2.93091C9.67247 3.00487 9.82287 3.11115 9.93676 3.22464L8.52501 4.64131L7.11326 6.05798C7.63242 6.57535 8.30408 6.83168 8.99496 6.83331L8.99967 4.83331ZM8.52501 4.64131L9.93676 3.22464C10.0522 3.33969 10.1602 3.49188 10.2351 3.67702C10.3092 3.86039 10.333 4.0315 10.333 4.16665H8.33301H6.33301C6.33301 4.86033 6.59008 5.53663 7.11326 6.05798L8.52501 4.64131ZM8.33301 4.16665H10.333V2.16665H8.33301H6.33301V4.16665H8.33301Z" fill="#A0A0A0" mask="url(#path-1-inside-1_6151_1083)"/></svg>`;
+  const collapseSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none"><path d="M1.83301 7.33331H5.16634V10.6666M11.1663 4.66665H7.83301V1.33331" stroke="#A0A0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+  // Helper to update the toggle icon
+  function updateToggleIcon(collapsed) {
+    if (toggleIconSpan) {
+      toggleIconSpan.innerHTML = collapsed ? collapseSVG : expandSVG;
+    }
+  }
+
+  // Helper to show/hide sidebar icons row
+  function updateSidebarIconsDisplay(collapsed) {
+    if (sidebarIcons) {
+      sidebarIcons.style.display = collapsed ? "none" : "flex";
+    }
+  }
+
+  // Hide sidebar icons by default on page load
+  if (sidebarIcons) {
+    sidebarIcons.style.display = "none";
+  }
+
+  // Initial state
+  if (sidebar && sidebarToggleBtn) {
+    const collapsed = sidebar.classList.contains("collapsed");
+    updateToggleIcon(collapsed);
+    updateSidebarIconsDisplay(collapsed);
+
+    sidebarToggleBtn.addEventListener("click", () => {
+      // Toggle collapsed class
+
+      const willBeCollapsed = !sidebar.classList.contains("collapsed");
+sidebar.classList.toggle("collapsed", willBeCollapsed);
+updateSidebarIconsDisplay(willBeCollapsed);
+
+      // Update icon and icons row
+      updateToggleIcon(willBeCollapsed);
+    });
+  }
+});
+// ... existing code ...
+
 function hideUnderlines(flag) {
   //console.log("in the hideUnderlines value of flag", flag);
   const textContainer = document.getElementById("inputText");
@@ -1164,15 +1231,13 @@ document.querySelector("#genBtn").addEventListener("click", async () => {
 
     // Start sidebar (explanations) - this will handle .correction-message loader and analyseLoader
     callSidebar();
-    adjustInputTextareaHeight();
 
-    legendSection.classList.remove("legend-working");
+    adjustInputTextareaHeight();
   } catch (error) {
     console.error("Processing error:", error);
     hideLoader(".textarea-wrapper");
     hideLoader(".correction-message");
     analyseLoader(false);
-    legendSection.classList.remove("legend-working"); // <-- Add this here too!
   }
 });
 
@@ -1736,9 +1801,7 @@ function displayResponse(content, scroll = true) {
   // 6. Restore behaviors and UI state
   hideUnderlines(toggleState);
   updateGenerateButtonState();
-
-  // Show the options container after displaying the correction/result
-  document.querySelector(".options-container").style.display = "block";
+  document.querySelector('.options-container').style.display = 'flex'; // or 'block'
 }
 
 const grammerApi = async (type, params) => {
@@ -10308,64 +10371,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-const legendSection = document.querySelector(".legend-section");
-const genBtn = document.querySelector("#genBtn");
+document.querySelectorAll('.sidebar-icon-btn').forEach((iconBtn) => {
+  iconBtn.addEventListener('click', function() {
+    const sidebar = document.querySelector('.correction-sidebar');
+    const sidebarIcons = document.querySelector('.sidebar-collapsed-icons');
+    const headerSection = document.querySelector('.header-section');
+    // Expand the sidebar if collapsed
+    if (sidebar && sidebar.classList.contains('collapsed')) {
+      toggleState = true;
+      if (typeof setCookie === "function") setCookie("korrektur-toggle", toggleState, 30);
+      if (typeof actionOnToggle === "function") actionOnToggle(toggleState);
+      const correctionSwitch = document.getElementById("correction-toggle");
+      if (correctionSwitch) correctionSwitch.checked = true;
+      // Fix header section wrapping
+      if (headerSection) headerSection.style.flexWrap = "nowrap";
+    }
+    // Always hide the icons when expanded
+    if (sidebarIcons) sidebarIcons.style.display = "none";
 
-legendSection.addEventListener("click", async function () {
-  // 1. Show working state
-  legendSection.classList.add("legend-working");
-
-  // 2. Trigger the real correction logic (simulate a click on the "Ret teksten" button)
-  // If you want to reuse the same logic, just call the click handler:
-  genBtn.click();
-});
-
-function selectSidebarOption(option) {
-  // 1. Update dropdown text
-  const dropdownText = document.querySelector(".hk-dropdown-text");
-  if (dropdownText) dropdownText.textContent = option;
-
-  // 2. Set active state for sidebar icons
-  document.querySelectorAll(".sidebar-icon-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.getAttribute("data-option") === option);
+    // Find the corresponding dropdown option
+    const optionValue = this.getAttribute('data-option');
+    const dropdownOption = document.querySelector('.hk-dropdown-option[data-option="' + optionValue + '"]');
+    if (dropdownOption) {
+      updateSelectedOption(dropdownOption);
+    }
   });
-
-  // 3. Set active state for dropdown options
-  document.querySelectorAll(".hk-dropdown-option").forEach((opt) => {
-    opt.classList.toggle("active", opt.textContent.trim() === option);
-  });
-
-  // 4. Show/hide panels (customize as needed)
-  // Example: show/hide .improv-inner, .correction-inner, .style-inner, etc.
-  if (option === "Grammatik") {
-    document.querySelector(".improv-inner").style.display = "flex";
-    document.querySelector(".correction-inner").style.display = "none";
-    document.querySelector(".style-inner").style.display = "none";
-  } else if (option === "Teksthjælp") {
-    document.querySelector(".improv-inner").style.display = "none";
-    document.querySelector(".correction-inner").style.display = "flex";
-    document.querySelector(".style-inner").style.display = "none";
-  } else if (option === "Opsætning") {
-    document.querySelector(".improv-inner").style.display = "none";
-    document.querySelector(".correction-inner").style.display = "none";
-    document.querySelector(".style-inner").style.display = "flex";
-  } else if (option === "Tone") {
-    // Add your logic for Tone panel
-  }
-}
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const sidebarToggleBtn = document.querySelector(".sidebar-toggle-btn");
-  const correctionToggle = document.getElementById("correction-toggle");
-
-  if (sidebarToggleBtn && correctionToggle) {
-    sidebarToggleBtn.addEventListener("click", () => {
-      // Toggle the switch state
-      correctionToggle.checked = !correctionToggle.checked;
-      toggleState = correctionToggle.checked;
-      setCookie("korrektur-toggle", toggleState, 30);
-      actionOnToggle(toggleState);
-    });
-  }
 });
