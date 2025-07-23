@@ -676,6 +676,7 @@ const dropdownOptions = document.querySelectorAll(".hk-dropdown-option");
 const correctionInner = document.querySelector(".correction-inner");
 const styleInner = document.querySelector(".style-inner");
 const improvInner = document.querySelector(".improv-inner");
+const toneInner = document.querySelector(".tone-inner")
 
 // Function to update selected option
 function updateSelectedOption(option) {
@@ -696,6 +697,7 @@ function updateSelectedOption(option) {
     improvInner.style.display = "none";
     correctionInner.style.display = "flex";
     styleInner.style.display = "none";
+    toneInner.style.display = "none"
     optionIcon.querySelectorAll("path").forEach((path) => {
       if (path.getAttribute("stroke") === "#929292") {
         path.setAttribute("stroke", "#E24668");
@@ -711,6 +713,7 @@ function updateSelectedOption(option) {
   } else if (option.dataset.option === "change-style") {
     improvInner.style.display = "none";
     correctionInner.style.display = "none";
+    toneInner.style.display = "none";
     styleInner.style.display = "flex";
     optionIcon.querySelectorAll("path").forEach((path) => {
       path.setAttribute("stroke", "#E24668");
@@ -719,12 +722,19 @@ function updateSelectedOption(option) {
     improvInner.style.display = "flex";
     correctionInner.style.display = "none";
     styleInner.style.display = "none";
-
+    toneInner.style.display = "none";
     optionIcon.querySelectorAll("path, line, polyline").forEach((element) => {
       element.setAttribute("stroke", "#E24668");
     });
+  } else if (option.dataset.option === "tone-style") {
+    improvInner.style.display = "none";
+    correctionInner.style.display = "none";
+    toneInner.style.display = "flex";
+    styleInner.style.display = "none";
+    optionIcon.querySelectorAll("path").forEach((path) => {
+      path.setAttribute("stroke", "#E24668");
+    });
   }
-
   onUpdateSelectOption(option);
   // ! remember to fix this
   // syncContentHeights();

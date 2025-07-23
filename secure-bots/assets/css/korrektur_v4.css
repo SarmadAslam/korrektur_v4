@@ -449,7 +449,6 @@ button {
   background: #fff;
   border-radius: var(--border-radius);
   box-shadow: 0 0.125rem 1rem rgba(0,0,0,0.07);
-  min-height: 50vh;
   overflow: hidden;
 }
 
@@ -754,6 +753,18 @@ button {
   display: none !important;
 }
 
+element.style {
+  max-width: none;
+  min-width: none;
+  flex-basis: none;
+  flex-grow: none;
+  flex-shrink: none;
+  width: none;
+  height: none;
+  padding: none;
+  margin: none;
+}
+
 .sidebar-toggle-btn {
   border-radius: 20%;
   background: var(--Color, #fff);
@@ -771,8 +782,8 @@ button {
 }
 
 .sidebar-toggle-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 100%;
+  height: 100%;
   stroke: #374151;
 }
 
@@ -1124,7 +1135,7 @@ button {
 }
 
 #rewriteBtn {
-  display: none;
+  display: flex;
 }
 /* .correction-inner {
   display: none;
@@ -1280,6 +1291,105 @@ button {
 .action-button:hover {
   background: #d84d68;
 }
+
+/* ||||||||||||||||||||||||||||||||| tone-inner |||||||||||||||||||||||||||||||| */
+
+.tone-inner {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-direction: column;
+  transition: none;
+  border-top: 1px solid #d1d1d1;
+  padding-top: 10px;
+}
+
+
+.tone-option {
+  display: flex;
+  align-items: flex-start;
+  padding: 4px 0px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+border: 1px solid rgba(222, 226, 230, 0.80);
+background: #FFF;
+box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+}
+
+.tone-option:last-child {
+  border-bottom: none;
+}
+
+.tone-option:nth-child(1):hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  /* #convencing */
+}
+
+.tone-option:nth-child(2):hover {
+  background-color: rgba(16, 185, 129, 0.1);
+  /* #simplify */
+}
+
+.tone-option:nth-child(3):hover {
+  background-color: rgba(236, 72, 153, 0.1);
+  /* #elaborate */
+}
+
+.tone-option:nth-child(4):hover {
+  background-color: rgba(124, 58, 237, 0.1);
+  /* #concise */
+}
+
+.tone-icon {
+  padding: 3px;
+  border-radius: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px 6px 7px 6px;
+  font-size: 20px;
+}
+
+.tone-icon.formal {
+  background-color: #e8eaff;
+  color: #6b77ff;
+}
+
+.tone-icon.chat {
+  background-color: #e6faea;
+  color: #2ed573;
+}
+
+.tone-icon.book {
+  background-color: #fff0ff;
+  color: #cd84f1;
+}
+
+.tone-icon.humor {
+  background-color: #fff4e4;
+  color: #ffaf40;
+}
+
+.tone-content {
+  flex: 1;
+}
+
+.tone-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #414141;
+  margin-bottom: 4px;
+}
+
+.tone-description {
+  display: none;
+  font-size: 12px;
+  color: #414141;
+  line-height: 1.4;
+}
+
+
 
 /* ||||||||||||||||||||||||||||||||| style-inner |||||||||||||||||||||||||||||||| */
 
@@ -1646,6 +1756,8 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
 .options-container {
   display: none;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
   padding: 2rem 2rem;
 }
@@ -1946,50 +2058,49 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
 
 /* Custom input section */
 .dk-hamdan-custom-input-section {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 5px;
-  padding: 16px;
-  transition: all 0.2s;
+  background: #fff;
+  border-radius: 0 0 1rem 1rem;
+  border-top: 1px solid #f0f0f0;
+  padding: 1rem 1rem 0.7rem 1rem;
+  margin-top: auto;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .dk-hamdan-custom-input-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .dk-hamdan-custom-input-label {
-  background: white;
-  padding: 6px 12px;
-  border-radius: 5px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  font-size: 14px;
-  font-weight: 500;
-  color: #333333;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.4rem;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #e86b86;
 }
 
 .dk-hamdan-input-container {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8f8f8;
+  border-radius: 0.7rem;
+  padding: 0.3rem 0.7rem;
 }
 
 .dk-hamdan-custom-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 5px;
-  font-size: 13px;
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  padding: 0.5rem 0;
   outline: none;
-  transition: all 0.2s;
-  box-sizing: border-box;
-  background-color: white;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  padding-right: 110px !important;
 }
 
 .dk-hamdan-custom-input:focus {
@@ -2004,7 +2115,8 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
 }
 
 .dk-hamdan-custom-input::placeholder {
-  color: #9ca3af;
+  color: #b0b0b0;
+  font-size: 1rem;
 }
 
 .dk-hamdan-enter-hint {
@@ -2060,24 +2172,34 @@ box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.90) inset, 0px 1px 3px 0px rgb
   background-color: rgba(124, 58, 237, 0.1);
 }
 
+
 .clear-icon {
-  position: absolute;
   display: flex;
   align-items: center;
-  gap: 5px;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 13px;
-  color: rgb(232, 107, 134);
+  gap: 0.2rem;
+  color: #e86b86;
+  font-weight: 500;
+  font-size: 1.2rem;
   cursor: pointer;
-  display: none;
-  padding: 5px;
+  user-select: none;
+  background: #fff;
+  border-radius: 50%;
+  padding: 0.3rem;
+  transition: background 0.15s;
 }
 
 .clear-icon:hover {
-  background-color: rgba(128, 128, 128, 0.232);
-  border-radius: 5px;
+  background: #f5e6ea;
+}
+
+@media (max-width: 600px) {
+  .dk-hamdan-custom-input-section {
+    padding: 0.7rem 0.5rem 0.5rem 0.5rem;
+    border-radius: 0 0 0.7rem 0.7rem;
+  }
+  .dk-hamdan-input-container {
+    padding: 0.2rem 0.3rem;
+  }
 }
 
 /* ------------------------------ navigation buttons ------------------------- */
@@ -2700,7 +2822,7 @@ line-height: 16px; /* 133.333% */
   }
 
   .rewrite-btn {
-    order: 4;
+
     background-color: #fcedf0;
     color: #e24668;
   }
@@ -3067,6 +3189,7 @@ line-height: 16px; /* 133.333% */
   overflow-y: auto;
   box-sizing: border-box;
   resize: none;
+  padding: 0px !important;
 }
 
 .ql-editor.ql-blank::before {
@@ -4111,7 +4234,5 @@ input:focus-visible,
   }
   .textarea-wrapper {
     padding: 12px 8px 8px 8px;
-    max-height: 60vh;
   }
 }
-
