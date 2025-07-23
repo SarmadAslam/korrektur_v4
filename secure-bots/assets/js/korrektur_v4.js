@@ -10381,15 +10381,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-document.querySelectorAll('.sidebar-icon-btn').forEach((iconBtn) => {
-  iconBtn.addEventListener('click', function() {
-    const sidebar = document.querySelector('.correction-sidebar');
-    const sidebarIcons = document.querySelector('.sidebar-collapsed-icons');
-    const headerSection = document.querySelector('.header-section');
+document.querySelectorAll(".sidebar-icon-btn").forEach((iconBtn) => {
+  iconBtn.addEventListener("click", function () {
+    const sidebar = document.querySelector(".correction-sidebar");
+    const sidebarIcons = document.querySelector(".sidebar-collapsed-icons");
+    const headerSection = document.querySelector(".header-section");
     // Expand the sidebar if collapsed
-    if (sidebar && sidebar.classList.contains('collapsed')) {
+    if (sidebar && sidebar.classList.contains("collapsed")) {
       toggleState = true;
-      if (typeof setCookie === "function") setCookie("korrektur-toggle", toggleState, 30);
+      if (typeof setCookie === "function")
+        setCookie("korrektur-toggle", toggleState, 30);
       if (typeof actionOnToggle === "function") actionOnToggle(toggleState);
       const correctionSwitch = document.getElementById("correction-toggle");
       if (correctionSwitch) correctionSwitch.checked = true;
@@ -10400,8 +10401,10 @@ document.querySelectorAll('.sidebar-icon-btn').forEach((iconBtn) => {
     if (sidebarIcons) sidebarIcons.style.display = "none";
 
     // Find the corresponding dropdown option
-    const optionValue = this.getAttribute('data-option');
-    const dropdownOption = document.querySelector('.hk-dropdown-option[data-option="' + optionValue + '"]');
+    const optionValue = this.getAttribute("data-option");
+    const dropdownOption = document.querySelector(
+      '.hk-dropdown-option[data-option="' + optionValue + '"]'
+    );
     if (dropdownOption) {
       updateSelectedOption(dropdownOption);
     }

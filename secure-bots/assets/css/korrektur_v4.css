@@ -742,6 +742,7 @@ button {
 .correction-sidebar.collapsed .improv-inner,
 .correction-sidebar.collapsed .correction-inner,
 .correction-sidebar.collapsed .style-inner,
+.correction-sidebar.collapsed .tone-inner,
 .correction-sidebar.collapsed .legend-panel,
 .correction-sidebar.collapsed .hamdan-speech-bubble,
 .correction-sidebar.collapsed .correction-message,
@@ -4233,5 +4234,89 @@ input:focus-visible,
   }
   .textarea-wrapper {
     padding: 12px 8px 8px 8px;
+  }
+}
+
+
+
+.dk-hamdan-input-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8f8f8;
+  border-radius: 0.7rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dk-hamdan-custom-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+  padding: 0.2rem 0;
+}
+
+.dk-hamdan-custom-input::placeholder {
+  color: #929292;
+}
+
+.control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.control-btn svg {
+  fill: none;
+  stroke: #929292;
+}
+
+.clear-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #e86b86;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.clear-icon:hover {
+  background: #d45a74;
+}
+
+.clear-icon svg {
+  fill: white;
+}
+
+@media (max-width: 600px) {
+  .dk-hamdan-input-container {
+    padding: 0.2rem 0.3rem;
+    gap: 0.3rem;
+  }
+
+  .dk-hamdan-custom-input {
+    font-size: 0.9rem;
+  }
+
+  .control-btn,
+  .clear-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .control-btn svg,
+  .clear-icon svg {
+    width: 20px;
+    height: 20px;
   }
 }
