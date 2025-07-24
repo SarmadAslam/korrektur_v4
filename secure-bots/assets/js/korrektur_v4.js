@@ -602,36 +602,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Helper to show/hide sidebar icons row
-  function updateSidebarIconsDisplay(collapsed) {
-    if (sidebarIcons) {
-      sidebarIcons.style.display = collapsed ? "none" : "flex";
-    }
-  }
-
-  // Hide sidebar icons by default on page load
-  if (sidebarIcons) {
-    sidebarIcons.style.display = "none";
-  }
-
+ 
   // Initial state
   if (sidebar && sidebarToggleBtn) {
     const collapsed = sidebar.classList.contains("collapsed");
     updateToggleIcon(collapsed);
-    updateSidebarIconsDisplay(collapsed);
 
     sidebarToggleBtn.addEventListener("click", () => {
       // Toggle collapsed class
-
       const willBeCollapsed = !sidebar.classList.contains("collapsed");
-sidebar.classList.toggle("collapsed", willBeCollapsed);
-updateSidebarIconsDisplay(willBeCollapsed);
-
-      // Update icon and icons row
+      sidebar.classList.toggle("collapsed", willBeCollapsed);
+      // Update icon
       updateToggleIcon(willBeCollapsed);
     });
   }
 });
+
 // ... existing code ...
 
 function hideUnderlines(flag) {
@@ -10397,8 +10383,6 @@ document.querySelectorAll(".sidebar-icon-btn").forEach((iconBtn) => {
       // Fix header section wrapping
       if (headerSection) headerSection.style.flexWrap = "nowrap";
     }
-    // Always hide the icons when expanded
-    if (sidebarIcons) sidebarIcons.style.display = "none";
 
     // Find the corresponding dropdown option
     const optionValue = this.getAttribute("data-option");
