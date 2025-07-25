@@ -792,203 +792,137 @@ element.style {
 }
 
 /* ____________________________ header of right container ______________________ */
-/* Header Section */
 .header-section {
   display: flex;
   flex-direction: row-reverse;
   justify-content: center;
   align-items: center;
+  border-bottom: 1px solid #d1d1d1;
+  background-color: #fdfdfd;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   z-index: 10;
   font-size: 9px;
   gap: 10px;
   min-height: fit-content;
   flex-shrink: 0;
+  /* Don't shrink header */
+  box-sizing: border-box;
   padding: 20px;
+  border-bottom: none;
   border-radius: 10px 10px 0 0;
   border-bottom: 1px solid rgba(222, 226, 230, 0.7);
   background: linear-gradient(286deg, #f8f9fa -3.9%, #fff 99.52%);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-  width: 100%;
-  box-sizing: border-box;
 }
 
-@media (max-width: 768px) {
-  .header-section {
-    padding: 15px;
-    gap: 8px;
-    border-radius: 8px 8px 0 0;
-  }
-}
+/* ___________________________ header dropdown ______________________ */
 
-@media (max-width: 480px) {
-  .header-section {
-    padding: 12px;
-    gap: 6px;
-    font-size: 8px;
-    flex-wrap: wrap;
-  }
-}
-
-/* Dropdown Container */
 .hk-dropdown-container {
   position: relative;
   width: 100%;
   max-width: 300px;
 }
 
-/* Dropdown Button */
 .hk-dropdown-button {
   width: 100%;
-  padding: 12px 16px;
+  padding: 10px 14px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 7px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: #111111;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 44px;
-  box-sizing: border-box;
 }
 
-/* Selected Option */
+.hk-dropdown-button:hover {
+  border-color: #e78799;
+  box-shadow: 0 2px 8px rgba(231, 135, 153, 0.1);
+}
+
 .selected-option {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex: 1;
+  gap: 10px;
 }
 
-.selected-option svg {
-  width: 18px;
-  height: 18px;
-  stroke: #6b7280;
-  flex-shrink: 0;
-}
-
-/* Dropdown Text */
 .hk-dropdown-text {
   flex-grow: 1;
   text-align: left;
   font-size: 14px;
-  font-weight: 500;
-  color: #374151;
+  color: #606060;
 }
 
-/* Dropdown Arrow */
 .hk-dropdown-arrow {
   transition: transform 0.2s ease;
-  width: 18px;
-  height: 18px;
-  stroke: #9ca3af;
-  flex-shrink: 0;
 }
 
 .hk-dropdown-button.active .hk-dropdown-arrow {
   transform: rotate(180deg);
 }
 
-/* Dropdown Content */
 .hk-dropdown-content {
   display: none;
   position: absolute;
+  top: 100%;
   left: 0;
   width: 100%;
+  margin-top: 5px;
+  background: #fff;
+  border: 1px solid #e2e2e2;
   border-radius: 8px;
-border: 1px solid var(--Text-Primary-Dark, #E4E4E4);
-background: #FFF;
-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  overflow: hidden;
-  box-sizing: border-box;
-  padding: 4px 0;
 }
 
 .hk-dropdown-content.show {
   display: block;
 }
 
-/* Dropdown Options */
 .hk-dropdown-option {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 0px 0px 0px 16px;
+  gap: 10px;
+  padding: 10px 12px;
   cursor: pointer;
   transition: background 0.2s ease;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
   color: #374151;
-  min-height: 35px;
-  box-sizing: border-box;
+}
+
+.hk-dropdown-option span {
+  font-size: 14px;
+  color: #606060;
+}
+
+.hk-dropdown-option:hover {
+  background: #f9fafb;
 }
 
 .hk-dropdown-option svg {
   width: 18px;
   height: 18px;
-  stroke: #6b7280;
+  stroke: #e24668;
   flex-shrink: 0;
 }
 
-.hk-dropdown-option span {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  flex: 1;
-}
-
-/* Hover State */
-.hk-dropdown-option:not(.active):hover {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
-  margin: 0px 10px 0px 10px;
-  border-radius: 8px;
-}
-
-/* Active State */
 .hk-dropdown-option.active {
-  background: #f8f9fa;
-  border: 1px solid #e4e4e4;
-  border-radius: 8px;
-  margin: 1px 10px 0px 11px;
-  padding-left: 10px;
+  background-color: #fdf3f5;
+  border-left: 3px solid #e24668;
 }
 
-.hk-dropdown-option.active span {
-  color: #111827;
-  font-weight: 600;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .hk-dropdown-container {
-    max-width: 100%;
-  }
-
-  .hk-dropdown-button,
-  .hk-dropdown-option {
-    padding: 14px 16px;
-    min-height: 48px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hk-dropdown-button,
-  .hk-dropdown-option {
-    padding: 12px 14px;
-    font-size: 13px;
-  }
-
-  .selected-option svg,
-  .hk-dropdown-option svg,
-  .hk-dropdown-arrow {
-    width: 16px;
-    height: 16px;
-  }
+.hk-dropdown-option.active svg path,
+.hk-dropdown-option.active svg line,
+.hk-dropdown-option.active svg polyline,
+.hk-dropdown-option.active svg polygon {
+  stroke: #e24668;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++ inner container of right container +++++++++++++++++ */
@@ -3947,12 +3881,12 @@ input:focus-visible,
   padding: 0 16px;
 }
 
-.sidebar-btn-container {
-  padding: 0.3rem;
-  border-radius: 8px;
-  /* background: #fff; */
-  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
-  transition: background 0.2s ease, transform 0.2s ease;
+.sidebar-btn-container{
+      padding: 0.3rem;
+    border-radius: 8px;
+    /* background: #fff; */
+    /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .sidebar-btn-container:hover {
@@ -3988,18 +3922,17 @@ input:focus-visible,
 }
 
 .sidebar-svg-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
-  border: 1px solid var(--Text-Primary-Dark, #e4e4e4);
-  background: var(--Color, #fff);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04),
-    0 1px 1px 0 rgba(255, 255, 255, 0.9) inset;
-  width: 2.5rem;
-  height: 2.5rem;
-  box-sizing: border-box;
-  margin-bottom: 0.25rem;
+     display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    border: 1px solid var(--Text-Primary-Dark, #e4e4e4);
+    background: var(--Color, #fff);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 1px 0 rgba(255, 255, 255, 0.9) inset;
+    width: 2.5rem;
+    height: 2.5rem;
+    box-sizing: border-box;
+    margin-bottom: 0.25rem;
 }
 
 /* Icon styling */
@@ -4007,6 +3940,7 @@ input:focus-visible,
   color: #6b7280;
   transition: all 0.2s ease;
 }
+
 
 .sidebar-icon-btn:hover svg {
   color: #374151;
@@ -4377,3 +4311,5 @@ input:focus-visible,
   outline: none; /* Removes the default focus outline */
   border: none; /* Optional: Adds a custom focus style if desired */
 }
+
+
