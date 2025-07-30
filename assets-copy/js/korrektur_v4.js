@@ -791,7 +791,6 @@ function onUpdateSelectOption(option) {
     if (lastCorrectedText != "" && isSmartCalled == false) {
       // ✅ Show loaders before calling analyzeTranslatedText
       showLoader(".correction-message", "Analyzing...");
-      setCorrectionLoading(true);
       analyseLoader(true);
       console.log("on update selection analyzeTranslatedText");
       analyzeTranslatedText();
@@ -799,21 +798,18 @@ function onUpdateSelectOption(option) {
     } else {
       // ✅ If no API call needed, make sure loaders are hidden
       hideLoader(".correction-message");
-      setCorrectionLoading(false);
       analyseLoader(false);
     }
   } else if (option.dataset.option === "improve-text") {
     // ✅ Show loader if explanations will be processed
     if (noOfChanges > 0 && !isExplanations) {
       showLoader(".correction-message", "Analyzing...");
-      setCorrectionLoading(true);
     }
 
     callImproveSidebar();
   } else if (option.dataset.option === "change-style") {
     // ✅ Make sure loaders are hidden for style tab
     hideLoader(".correction-message");
-    setCorrectionLoading(false);
     analyseLoader(false);
   }
   clearHighlights();
@@ -830,7 +826,6 @@ function callSidebar() {
       // ✅ Show loader if explanations will be processed
       if (noOfChanges > 0 && !isExplanations) {
         showLoader(".correction-message", "Analyzing...");
-        setCorrectionLoading(true);
       }
       callImproveSidebar();
     } else if (dropDownValue === "Smart teksthjælp") {
@@ -840,7 +835,6 @@ function callSidebar() {
       if (lastCorrectedText != "" && isSmartCalled == false) {
         // ✅ Show loaders before calling analyzeTranslatedText
         showLoader(".correction-message", "Analyzing...");
-        setCorrectionLoading(true);
         analyseLoader(true);
         console.log("call sidebar analyzeTranslatedText");
         analyzeTranslatedText();
@@ -859,7 +853,6 @@ function callImproveSidebar() {
   if (noOfChanges != -1) {
     if (noOfChanges == 0) {
       hideLoader(".correction-message");
-      setCorrectionLoading(false);
       noChangeResultImproveInner();
       analyseLoader(false);
       return;
@@ -876,7 +869,6 @@ function callImproveSidebar() {
       const existingLoader = document.querySelector(".gradient-loader");
       if (!existingLoader) {
         showLoader(".correction-message", "Analyzing...");
-        setCorrectionLoading(true);
       }
 
       // Check if we have multiple HTML parts (same logic as correction)
@@ -897,7 +889,6 @@ function callImproveSidebar() {
             isExplanations = true;
             processGrammarExplanations(explanationResults);
             hideLoader(".correction-message");
-            setCorrectionLoading(false);
             analyseLoader(false);
           })
           .catch((error) => {
@@ -922,7 +913,6 @@ function callImproveSidebar() {
             isExplanations = true;
             processGrammarExplanations(combinedExplanations);
             hideLoader(".correction-message");
-            setCorrectionLoading(false);
             analyseLoader(false);
           })
           .catch((error) => {
@@ -935,13 +925,11 @@ function callImproveSidebar() {
     } else {
       // ✅ If explanations already processed, just hide loaders
       hideLoader(".correction-message");
-      setCorrectionLoading(false);
       analyseLoader(false);
     }
   } else {
     // ✅ If no changes processed yet, hide loaders
     hideLoader(".correction-message");
-    setCorrectionLoading(false);
     analyseLoader(false);
   }
 }
@@ -1129,7 +1117,6 @@ document.querySelector("#genBtn").addEventListener("click", async () => {
   lastCorrectedText = "";
   showLoader(".textarea-wrapper", "Retter teksten...");
   showLoader(".correction-message", "Analyzing...");
-  setCorrectionLoading(true);
   analyseLoader(true);
 
   try {
@@ -1246,7 +1233,6 @@ document.querySelector("#genBtn").addEventListener("click", async () => {
     console.error("Processing error:", error);
     hideLoader(".textarea-wrapper");
     hideLoader(".correction-message");
-    setCorrectionLoading(false);
     analyseLoader(false);
   }
 });
@@ -2519,7 +2505,7 @@ const showLoader = (selector, text) => {
 
   // Different loader implementations based on selector
   if (selector === ".textarea-wrapper") {
-    // Loader 1: For textarea
+    // Loader 1: For textarea - Circular Spinner
     element.insertAdjacentHTML(
       "beforeend",
       `
@@ -2533,9 +2519,10 @@ const showLoader = (selector, text) => {
     );
   } else if (selector === ".correction-message") {
     if (toggleState === false) return;
-    // Loader 2: For correction content
+    // Loader 2: For correction content - Simple text update
     // console.log("inside the correction-message loader")
     const correctionContent = document.querySelector(".correction-content");
+    const speechBubble = document.querySelector(".correction-inner .demo-inner .hamdan-robot-container .hamdan-speech-bubble");
 
     if (
       correctionContent &&
@@ -2543,9 +2530,8 @@ const showLoader = (selector, text) => {
     ) {
       correctionContent.classList.remove("has-explanations");
     }
-
-    document.querySelector('.correction-sidebar').classList.add('working');
-    // correctionContent.innerHTML = "";
+    
+    // Clear content and show simple message
     correctionContent.innerHTML = `
         <div id="gif"></div>
         <div class="correction-message">
@@ -2553,15 +2539,9 @@ const showLoader = (selector, text) => {
         </div>
         `;
 
-    lottieLoadAnimation();
-    const span = document.querySelector(".correction-message");
-    if (span) {
-      span.insertAdjacentHTML(
-        "afterbegin",
-        `
-            <div class="gradient-loader"></div>
-            `
-      );
+    // Update speech bubble text to "Working..."
+    if (speechBubble) {
+      speechBubble.textContent = "Working...";
     }
   }
 };
@@ -2574,8 +2554,6 @@ const hideLoader = (selector) => {
   if (!element) return;
 
   if (selector === ".correction-message") {
-    // When hiding loader - remove class  
-document.querySelector('.correction-sidebar').classList.remove('working');
     const loader = document.querySelector(".gradient-loader");
     if (loader) {
       loader.remove();
@@ -4067,7 +4045,6 @@ function fallbackToSingleExplanation() {
       isExplanations = true;
       processGrammarExplanations(explanationResults);
       hideLoader(".correction-message");
-      setCorrectionLoading(false);
       analyseLoader(false); // ✅ Hide after fallback completes
     })
     .catch((error) => {
@@ -4090,7 +4067,6 @@ function handleExplanationError() {
         `;
   }
   hideLoader(".correction-message");
-  setCorrectionLoading(false);
   analyseLoader(false); // ✅ Hide on error
 }
 
@@ -10414,83 +10390,3 @@ document.querySelectorAll(".sidebar-icon-btn").forEach((iconBtn) => {
     }
   });
 });
-
-// Helper functions for custom loading state
-function setCustomLoadingState(containerSelector, isLoading) {
-  const container = document.querySelector(containerSelector);
-  const speechBubble = container?.querySelector('.hamdan-speech-bubble');
-  
-  if (!container || !speechBubble) return;
-  
-  if (isLoading) {
-    container.classList.add('loading');
-    speechBubble.setAttribute('data-original-text', speechBubble.textContent);
-    speechBubble.textContent = 'Working...';
-  } else {
-    container.classList.remove('loading');
-    const originalText = speechBubble.getAttribute('data-original-text');
-    if (originalText) {
-      speechBubble.textContent = originalText;
-      speechBubble.removeAttribute('data-original-text');
-    }
-  }
-}
-
-// Apply to correction-inner
-function setCorrectionLoading(isLoading) {
-  setCustomLoadingState('.correction-inner', isLoading);
-}
-
-// Apply to improv-inner  
-function setImprovLoading(isLoading) {
-  setCustomLoadingState('.improv-inner', isLoading);
-}
-
-// Updated helper functions for custom loading state
-function setCustomLoadingState(containerSelector, isLoading) {
-  const container = document.querySelector(containerSelector);
-  
-  if (!container) {
-    console.log(`Container not found: ${containerSelector}`);
-    return;
-  }
-  
-  // Try multiple possible selectors for the speech bubble
-  const speechBubbleSelectors = [
-    '.hamdan-speech-bubble',
-    '.demo-inner .hamdan-speech-bubble', 
-    '.hamdan-robot-container .hamdan-speech-bubble',
-    '.demo-inner .hamdan-robot-container .hamdan-speech-bubble'
-  ];
-  
-  let speechBubble = null;
-  for (const selector of speechBubbleSelectors) {
-    speechBubble = container.querySelector(selector);
-    if (speechBubble) break;
-  }
-  
-  if (!speechBubble) {
-    console.log(`Speech bubble not found in ${containerSelector}`);
-    console.log('Available elements:', container.querySelectorAll('*'));
-    return;
-  }
-  
-  if (isLoading) {
-    document.querySelector(".correction-message2").style.display = "none";
-document.querySelector(".correction-message").style.display = "none";
-    container.classList.add('loading');
-    speechBubble.setAttribute('data-original-text', speechBubble.textContent);
-    speechBubble.textContent = 'Working...';
-    console.log('Set loading state for:', containerSelector);
-  } else {
-    container.classList.remove('loading');
-    const originalText = speechBubble.getAttribute('data-original-text');
-    if (originalText) {
-      speechBubble.textContent = originalText;
-      speechBubble.removeAttribute('data-original-text');
-    } else {
-      speechBubble.textContent = 'Jeg er klar!'; // fallback
-    }
-    console.log('Removed loading state for:', containerSelector);
-  }
-}
