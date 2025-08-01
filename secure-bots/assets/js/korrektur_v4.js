@@ -10478,6 +10478,8 @@ function setCustomLoadingState(containerSelector, isLoading) {
   if (isLoading) {
     document.querySelector(".correction-message2").style.display = "none";
 document.querySelector(".correction-message").style.display = "none";
+document.querySelector('.hamdan-robot-container svg').classList.add('disabled');
+document.querySelector('.legend-section').classList.add('disabled');
     container.classList.add('loading');
     speechBubble.setAttribute('data-original-text', speechBubble.textContent);
     speechBubble.textContent = 'Working...';

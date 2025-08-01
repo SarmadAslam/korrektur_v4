@@ -429,10 +429,10 @@ button {
   align-items: center;
   cursor: pointer;
 }
-.legend-section.disabled {
+.legend-section.disabled, .hamdan-robot-container svg.disabled {
   opacity: 0.5;
-  pointer-events: none;
-  filter: grayscale(1);
+  pointer-events: none;  /* Prevents interaction */
+  filter: grayscale(100%);  /* Optional: Makes it look more disabled */
 }
 
 .legend-item {
@@ -647,7 +647,6 @@ box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.90) inset, 0 1px 3px 0 rgba(0, 0, 
 
 .undo-btn:hover,
 .redo-btn:hover {
-  border-radius: 10px;
 border: 1px solid var(--Text-Primary-Dark, #E4E4E4);
 background: linear-gradient(139deg, #FFF 12.36%, #F1F3F4 94.3%);
 box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.90) inset, 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 2px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 1px 0 rgba(255, 255, 255, 0.90) inset;
